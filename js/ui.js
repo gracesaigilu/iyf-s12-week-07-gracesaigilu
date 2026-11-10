@@ -1,1 +1,37 @@
-export function renderTasks(tasks, onDelete, onToggle) { const list = document.getElementById("todo-list") || document.querySelector(".todo-list"); if (!list) return; list.innerHTML = ""; tasks.forEach(task => { const li = document.createElement("li"); li.className = task.completed ? "completed" : ""; li.innerHTML = `<span>${task.text}</span> <button class="delete-btn">Delete</button>`; li.querySelector("span").addEventListener("click", () => onToggle(task.id)); li.querySelector(".delete-btn").addEventListener("click", () => onDelete(task.id)); list.appendChild(li); }); }
+// js/ui.js - Handles DOM rendering
+
+import { filterTasks } from './todo-logic.js';
+
+export function render(state, { onToggle, onDelete }) {
+    const { tasks, currentFilter } = state;
+        const todoList = document.getElementById('todo-list');
+            const itemCount = document.getElementById('item-count');
+
+                todoList.innerHTML = '';
+                    const filteredTasks = filterTasks(tasks, currentFilter);
+
+                        filteredTasks.forEach(task => {
+                                const li = document.createElement('li');
+                                        li.className = `todo-item ${task.completed ? 'completed' : ''}`;
+                                                
+                                                        const span = document.createElement('span');
+                                                                span.textContent = task.text;
+                                                                        span.addEventListener('click', () => onToggle(task.id));
+
+                                                                                const deleteBtn = document.createElement('button');
+                                                                                        deleteBtn.textContent = 'Delete';
+                                                                                                deleteBtn.className = 'delete-btn';
+                                                                                                        deleteBtn.addEventListener('click', (e) => {
+                                                                                                                    e.stopPropagation();
+                                                                                                                                onDelete(task.id);
+                                                                                                                                        });
+
+                                                                                                                                                li.appendChild(span);
+                                                                                                                                                        li.appendChild(deleteBtn);
+                                                                                                                                                                todoList.appendChild(li);
+                                                                                                                                                                    });
+
+                                                                                                                                                                        const activeCount = tasks.filter(t => !t.completed).length;
+                                                                                                                                                                            itemCount.textContent = `${activeCount} item${activeCount === 1 ? '' : 's'} left`;
+                                                                                                                                                                            }
+                                                                                                                                                                            

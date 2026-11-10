@@ -1,1 +1,22 @@
-export function saveTasks(tasks) { localStorage.setItem("todo_tasks", JSON.stringify(tasks)); } export function loadTasks() { const tasks = localStorage.getItem("todo_tasks"); return tasks ? JSON.parse(tasks) : []; } export function saveFilter(filter) { localStorage.setItem("todo_filter", filter); } export function loadFilter() { return localStorage.getItem("todo_filter") || "all"; }
+// js/storage.js - Handles localStorage safely
+
+const STORAGE_KEY = 'todo_app_tasks';
+
+export function loadTasks() {
+    try {
+            const stored = localStorage.getItem(STORAGE_KEY);
+                    return stored ? JSON.parse(stored) : [];
+                        } catch (error) {
+                                console.error('Failed to load tasks from localStorage', error);
+                                        return [];
+                                            }
+                                            }
+
+                                            export function saveTasks(tasks) {
+                                                try {
+                                                        localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+                                                            } catch (error) {
+                                                                    console.error('Failed to save tasks to localStorage', error);
+                                                                        }
+                                                                        }
+                                                                        
