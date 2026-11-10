@@ -1,28 +1,18 @@
-// js/todo-logic.js
+export function addTask(tasks, text) {
+  const newTask = {
+    id: Date.now().toString(),
+    text: text,
+    completed: false
+  };
+  return [...tasks, newTask];
+}
 
-function addTodo(todos, text) {
-  if (!text || text.trim() === "") return todos;
-    const newTodo = {
-        id: Date.now(),
-            text: text.trim(),
-                completed: false
-                  };
-                    return [...todos, newTodo];
-                    }
+export function toggleTask(tasks, id) {
+  return tasks.map(task => 
+    task.id === id ? { ...task, completed: !task.completed } : task
+  );
+}
 
-                    function deleteTodo(todos, id) {
-                      return todos.filter(todo => todo.id !== id);
-                      }
-
-                      function toggleTodo(todos, id) {
-                        return todos.map(todo => 
-                            todo.id === id ? { ...todo, completed: !todo.completed } : todo
-                              );
-                              }
-
-                              module.exports = {
-                                addTodo,
-                                  deleteTodo,
-                                    toggleTodo
-                                    };
-                                    
+export function deleteTask(tasks, id) {
+  return tasks.filter(task => task.id !== id);
+}
