@@ -1,1 +1,13 @@
-import { loadTasks, saveTasks, loadFilter, saveFilter } from "./storage.js"; let tasks = loadTasks(); let currentFilter = loadFilter(); export function getTasks() { return tasks; } export function setTasks(newTasks) { tasks = newTasks; saveTasks(tasks); } export function getFilter() { return currentFilter; } export function setFilter(filter) { currentFilter = filter; saveFilter(filter); }
+export const state = {
+      tasks: [],
+        currentFilter: 'all'
+        };
+
+        export function setTasks(newTasks) {
+          state.tasks = newTasks;
+          }
+
+          export function setFilter(filter) {
+            state.currentFilter = filter;
+            }
+

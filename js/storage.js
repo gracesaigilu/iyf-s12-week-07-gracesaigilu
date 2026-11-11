@@ -1,1 +1,13 @@
-export function saveTasks(tasks) { localStorage.setItem("todo_tasks", JSON.stringify(tasks)); } export function loadTasks() { const tasks = localStorage.getItem("todo_tasks"); return tasks ? JSON.parse(tasks) : []; } export function saveFilter(filter) { localStorage.setItem("todo_filter", filter); } export function loadFilter() { return localStorage.getItem("todo_filter") || "all"; }
+import { state } from './state.js';
+
+const STORAGE_KEY = 'WEEK7_TODOS';
+
+export function saveStorage() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state.tasks));
+  }
+
+  export function loadStorage() {
+    const data = localStorage.getItem(STORAGE_KEY);
+      return data ? JSON.parse(data) : [];
+      }
+      

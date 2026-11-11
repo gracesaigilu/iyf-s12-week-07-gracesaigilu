@@ -1,1 +1,46 @@
-export function renderTasks(tasks, onDelete, onToggle) { const list = document.getElementById("todo-list") || document.querySelector(".todo-list"); if (!list) return; list.innerHTML = ""; tasks.forEach(task => { const li = document.createElement("li"); li.className = task.completed ? "completed" : ""; li.innerHTML = `<span>${task.text}</span> <button class="delete-btn">Delete</button>`; li.querySelector("span").addEventListener("click", () => onToggle(task.id)); li.querySelector(".delete-btn").addEventListener("click", () => onDelete(task.id)); list.appendChild(li); }); }
+export function renderTasks(tasks, currentFilter, onToggle, onDelete) {
+          const todoList = document.getElementById('todo-list');
+            const itemCounts = document.getElementById('item-count');
+              if (!todoList) return;
+
+                todoList.innerHTML = '';
+
+                  const filteredTasks = tasks.filter(task => {
+                      if (currentFilter === 'active') return !task.completed;
+                          if (currentFilter === 'completed') return task.completed;
+                              return true;
+                                });
+
+                                  filteredTasks.forEach(task => {
+                                      const li = document.createElement('li');
+                                          li.className = `todo-item ${task.completed ? 'completed' : ''}`;
+                                              li.dataset.id = task.id;
+
+                                                  const span = document.createElement('span');
+                                                      span.textContent = task.text;
+
+                                                          const deleteBtn = document.createElement('button');
+                                                              deleteBtn.className = 'delete-btn';
+                                                                  deleteBtn.textContent = 'Delete';
+
+                                                                      li.appendChild(span);
+                                                                          li.appendChild(deleteBtn);
+
+                                                                              li.addEventListener('click', (e) => {
+                                                                                    if (e.target.classList.contains('delete-btn')) {
+                                                                                            onDelete(task.id);
+                                                                                                  } else {
+                                                                                                          onToggle(task.id);
+                                                                                                                }
+                                                                                                                    });
+
+                                                                                                                        todoList.appendChild(li);
+                                                                                                                          });
+
+                                                                                                                            if (itemCounts) {
+                                                                                                                                const activeCount = tasks.filter(task => !task.completed).length;
+                                                                                                                                    itemCounts.textContent = `${activeCount} item${activeCount === 1 ? '' : 's'} left`;
+                                                                                                                                      }
+                                                                                                                                      
+
+}
