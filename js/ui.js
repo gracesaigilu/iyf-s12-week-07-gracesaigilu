@@ -1,37 +1,46 @@
-// js/ui.js - Handles DOM rendering
-
-import { filterTasks } from './todo-logic.js';
-
-export function render(state, { onToggle, onDelete }) {
-    const { tasks, currentFilter } = state;
-        const todoList = document.getElementById('todo-list');
-            const itemCount = document.getElementById('item-count');
+export function renderTasks(tasks, currentFilter, onToggle, onDelete) {
+          const todoList = document.getElementById('todo-list');
+            const itemCounts = document.getElementById('item-count');
+              if (!todoList) return;
 
                 todoList.innerHTML = '';
-                    const filteredTasks = filterTasks(tasks, currentFilter);
 
-                        filteredTasks.forEach(task => {
-                                const li = document.createElement('li');
-                                        li.className = `todo-item ${task.completed ? 'completed' : ''}`;
-                                                
-                                                        const span = document.createElement('span');
-                                                                span.textContent = task.text;
-                                                                        span.addEventListener('click', () => onToggle(task.id));
+                  const filteredTasks = tasks.filter(task => {
+                      if (currentFilter === 'active') return !task.completed;
+                          if (currentFilter === 'completed') return task.completed;
+                              return true;
+                                });
 
-                                                                                const deleteBtn = document.createElement('button');
-                                                                                        deleteBtn.textContent = 'Delete';
-                                                                                                deleteBtn.className = 'delete-btn';
-                                                                                                        deleteBtn.addEventListener('click', (e) => {
-                                                                                                                    e.stopPropagation();
-                                                                                                                                onDelete(task.id);
-                                                                                                                                        });
+                                  filteredTasks.forEach(task => {
+                                      const li = document.createElement('li');
+                                          li.className = `todo-item ${task.completed ? 'completed' : ''}`;
+                                              li.dataset.id = task.id;
 
-                                                                                                                                                li.appendChild(span);
-                                                                                                                                                        li.appendChild(deleteBtn);
-                                                                                                                                                                todoList.appendChild(li);
-                                                                                                                                                                    });
+                                                  const span = document.createElement('span');
+                                                      span.textContent = task.text;
 
-                                                                                                                                                                        const activeCount = tasks.filter(t => !t.completed).length;
-                                                                                                                                                                            itemCount.textContent = `${activeCount} item${activeCount === 1 ? '' : 's'} left`;
-                                                                                                                                                                            }
-                                                                                                                                                                            
+                                                          const deleteBtn = document.createElement('button');
+                                                              deleteBtn.className = 'delete-btn';
+                                                                  deleteBtn.textContent = 'Delete';
+
+                                                                      li.appendChild(span);
+                                                                          li.appendChild(deleteBtn);
+
+                                                                              li.addEventListener('click', (e) => {
+                                                                                    if (e.target.classList.contains('delete-btn')) {
+                                                                                            onDelete(task.id);
+                                                                                                  } else {
+                                                                                                          onToggle(task.id);
+                                                                                                                }
+                                                                                                                    });
+
+                                                                                                                        todoList.appendChild(li);
+                                                                                                                          });
+
+                                                                                                                            if (itemCounts) {
+                                                                                                                                const activeCount = tasks.filter(task => !task.completed).length;
+                                                                                                                                    itemCounts.textContent = `${activeCount} item${activeCount === 1 ? '' : 's'} left`;
+                                                                                                                                      }
+                                                                                                                                      
+
+}

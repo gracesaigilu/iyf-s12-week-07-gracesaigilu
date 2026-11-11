@@ -1,60 +1,60 @@
-// js/app.js - Main entry point
-
-import { getState, setTasks, setFilter } from './state.js';
-import { addTask, toggleTask, deleteTask } from './todo-logic.js';
-import { render } from './ui.js';
+import { state, setTasks, setFilter } from './state.js';
+import { loadStorage, saveStorage } from './storage.js';
+import { createTask, addTask, removeTask, toggleTask } from './todo-logic.js';
+import { renderTasks } from './ui.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('todo-form');
-        const input = document.getElementById('todo-input');
-            const filterButtons = document.querySelectorAll('.filter-btn');
-                const clearCompletedBtn = document.getElementById('clear-completed');
+  setTasks(loadStorage());
 
-                    function updateAndRender() {
-                            render(getState(), {
-                                        onToggle: (id) => {
-                                                        const { tasks } = getState();
-                                                                        const updated = toggleTask(tasks, id);
-                                                                                        setTasks(updated);
-                                                                                                        updateAndRender();
-                                                                                                                    },
-                                                                                                                                onDelete: (id) => {
-                                                                                                                                                const { tasks } = getState();
-                                                                                                                                                                const updated = deleteTask(tasks, id);
-                                                                                                                                                                                setTasks(updated);
-                                                                                                                                                                                                updateAndRender();
-                                                                                                                                                                                                            }
-                                                                                                                                                                                                                    });
-                                                                                                                                                                                                                        }
+    const todoForm = document.getElementById('todo-form');
+      const todoInput = document.getElementById('todo-input');
+        const clearCompletedBtn = document.getElementById('clear-completed');
+          const filterButtons = document.querySelectorAll('.filter-btn');
 
-                                                                                                                                                                                                                            form.addEventListener('submit', (e) => {
-                                                                                                                                                                                                                                    e.preventDefault();
-                                                                                                                                                                                                                                            const text = input.value;
-                                                                                                                                                                                                                                                    const { tasks } = getState();
-                                                                                                                                                                                                                                                            const updated = addTask(tasks, text);
-                                                                                                                                                                                                                                                                    setTasks(updated);
-                                                                                                                                                                                                                                                                            input.value = '';
-                                                                                                                                                                                                                                                                                    updateAndRender();
-                                                                                                                                                                                                                                                                                        });
+            function updateAndRender() {
+                saveStorage();
+                    renderTasks(state.tasks, state.currentFilter, handleToggle, handleDelete);
+                      }
 
-                                                                                                                                                                                                                                                                                            filterButtons.forEach(btn => {
-                                                                                                                                                                                                                                                                                                    btn.addEventListener('click', () => {
-                                                                                                                                                                                                                                                                                                                filterButtons.forEach(b => b.classList.remove('active'));
-                                                                                                                                                                                                                                                                                                                            btn.classList.add('active');
-                                                                                                                                                                                                                                                                                                                                        const filter = btn.getAttribute('data-filter');
-                                                                                                                                                                                                                                                                                                                                                    setFilter(filter);
-                                                                                                                                                                                                                                                                                                                                                                updateAndRender();
-                                                                                                                                                                                                                                                                                                                                                                        });
-                                                                                                                                                                                                                                                                                                                                                                            });
+                        function handleToggle(id) {
+                            setTasks(toggleTask(state.tasks, id));
+                                updateAndRender();
+                                  }
 
-                                                                                                                                                                                                                                                                                                                                                                                clearCompletedBtn.addEventListener('click', () => {
-                                                                                                                                                                                                                                                                                                                                                                                        const { tasks } = getState();
-                                                                                                                                                                                                                                                                                                                                                                                                const activeOnly = tasks.filter(t => !t.completed);
-                                                                                                                                                                                                                                                                                                                                                                                                        setTasks(activeOnly);
-                                                                                                                                                                                                                                                                                                                                                                                                                updateAndRender();
-                                                                                                                                                                                                                                                                                                                                                                                                                    });
+                                    function handleDelete(id) {
+                                        setTasks(removeTask(state.tasks, id));
+                                            updateAndRender();
+                                              }
 
-                                                                                                                                                                                                                                                                                                                                                                                                                        // Initial render on load
-                                                                                                                                                                                                                                                                                                                                                                                                                            updateAndRender();
-                                                                                                                                                                                                                                                                                                                                                                                                                            });
-                                                                                                                                                                                                                                                                                                                                                                                                                            
+                                                if (todoForm && todoInput) {
+                                                    todoForm.addEventListener('submit', (e) => {
+                                                          e.preventDefault();
+                                                                const text = todoInput.value.trim();
+                                                                      if (!text) return;
+
+                                                                            const newTask = createTask(text);
+                                                                                  setTasks(addTask(state.tasks, newTask));
+                                                                                        todoInput.value = '';
+                                                                                              updateAndRender();
+                                                                                                  });
+                                                                                                    }
+
+                                                                                                      filterButtons.forEach(btn => {
+                                                                                                          btn.addEventListener('click', () => {
+                                                                                                                filterButtons.forEach(b => b.classList.remove('active'));
+                                                                                                                      btn.classList.add('active');
+                                                                                                                            setFilter(btn.dataset.filter);
+                                                                                                                                  renderTasks(state.tasks, state.currentFilter, handleToggle, handleDelete);
+                                                                                                                                      });
+                                                                                                                                        });
+
+                                                                                                                                          if (clearCompletedBtn) {
+                                                                                                                                              clearCompletedBtn.addEventListener('click', () => {
+                                                                                                                                                    setTasks(state.tasks.filter(task => !task.completed));
+                                                                                                                                                          updateAndRender();
+                                                                                                                                                              });
+                                                                                                                                                                }
+
+                                                                                                                                                                  renderTasks(state.tasks, state.currentFilter, handleToggle, handleDelete);
+                                                                                                                                                                  });
+                                                                                                                                                                  

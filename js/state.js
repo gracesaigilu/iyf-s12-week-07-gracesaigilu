@@ -1,20 +1,13 @@
-// js/state.js - Manages the application state
+export const state = {
+      tasks: [],
+        currentFilter: 'all'
+        };
 
-import { loadTasks, saveTasks } from './storage.js';
+        export function setTasks(newTasks) {
+          state.tasks = newTasks;
+          }
 
-let tasks = loadTasks();
-let currentFilter = 'all';
-
-export function getState() {
-    return { tasks, currentFilter };
-    }
-
-    export function setTasks(newTasks) {
-        tasks = newTasks;
-            saveTasks(tasks);
+          export function setFilter(filter) {
+            state.currentFilter = filter;
             }
 
-            export function setFilter(filter) {
-                currentFilter = filter;
-                }
-                

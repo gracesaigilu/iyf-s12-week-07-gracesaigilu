@@ -1,31 +1,30 @@
-// js/todo-logic.js - Pure functions (no DOM, no localStorage)
+export function createTask(text) {
+      return {
+          id: Date.now(),
+              text: text,
+                  completed: false
+                    };
+                    }
 
-export function addTask(tasks, text) {
-    if (!text || text.trim() === '') return tasks;
-        const newTask = {
-                id: Date.now(),
-                        text: text.trim(),
-                                completed: false
-                                    };
-                                        // Return a new array to prevent mutating the original array
-                                            return [...tasks, newTask];
-                                            }
+                    export function addTask(tasks, task) {
+                      return [...tasks, task];
+                      }
 
-                                            export function toggleTask(tasks, id) {
-                                                return tasks.map(task => 
-                                                        task.id === id ? { ...task, completed: !task.completed } : task
-                                                            );
-                                                            }
+                      export function removeTask(tasks, taskId) {
+                        return tasks.filter(task => task.id !== taskId);
+                        }
 
-                                                            export function deleteTask(tasks, id) {
-                                                                return tasks.filter(task => task.id !== id);
-                                                                }
+                        export function toggleTask(tasks, taskId) {
+                          return tasks.map(task => 
+                              task.id === taskId ? { ...task, completed: !task.completed } : task
+                                );
+                                }
 
-                                                                export function filterTasks(tasks, currentFilter) {
-                                                                    return tasks.filter(task => {
-                                                                            if (currentFilter === 'active') return !task.completed;
-                                                                                    if (currentFilter === 'completed') return task.completed;
-                                                                                            return true;
-                                                                                                });
-                                                                                                }
-                                                                                                
+                                export function filterTasks(tasks, filter) {
+                                  return tasks.filter(task => {
+                                      if (filter === 'active') return !task.completed;
+                                          if (filter === 'completed') return task.completed;
+                                              return true;
+                                                });
+                                                }
+

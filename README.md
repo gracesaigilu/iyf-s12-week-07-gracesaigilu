@@ -21,5 +21,7 @@ A fully refactored, testable, and modularized To-Do List application built with 
 │   ├── state.js        # Central state and storage coordination
 │   ├── storage.js      # LocalStorage API handler
 │   ├── todo-logic.js   # Pure functions for task operations
-│   └── ui.js           # DOM manipulation and rendering
+│   └── ui.js           # DOM manipulation and ## 🤝 Collaboration
+- **My Pull Request:** https://github.com/gracesaigilu/iyf-s12-week-07-gracesaigilu/pull/2
+rendering
 └── README.md

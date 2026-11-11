@@ -1,22 +1,13 @@
-// js/storage.js - Handles localStorage safely
+import { state } from './state.js';
 
-const STORAGE_KEY = 'todo_app_tasks';
+const STORAGE_KEY = 'WEEK7_TODOS';
 
-export function loadTasks() {
-    try {
-            const stored = localStorage.getItem(STORAGE_KEY);
-                    return stored ? JSON.parse(stored) : [];
-                        } catch (error) {
-                                console.error('Failed to load tasks from localStorage', error);
-                                        return [];
-                                            }
-                                            }
+export function saveStorage() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state.tasks));
+  }
 
-                                            export function saveTasks(tasks) {
-                                                try {
-                                                        localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-                                                            } catch (error) {
-                                                                    console.error('Failed to save tasks to localStorage', error);
-                                                                        }
-                                                                        }
-                                                                        
+  export function loadStorage() {
+    const data = localStorage.getItem(STORAGE_KEY);
+      return data ? JSON.parse(data) : [];
+      }
+      
